@@ -1,0 +1,253 @@
+---
+title: "Final_Project_Document"
+author: "Praveen Kenderla"
+date: "April 30, 2018"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+header-includes: \DeclareMathSizes{12}{12}{12}{12}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading libraries
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+library(cdcfluview)
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+```
+******
+
+## Extracting Influenza data from CDC website
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+Data1 <- ilinet() # extracting the influenza data from CDC website
+
+```
+******
+
+## Extracting Season data based on weeks for all years: 1 season has 13 weeks:
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+S1 <- Data1 %>% # Season 1: 1 to 13 weeks in an year
+  filter(year > 2000 & year < 2018, week <= 13 & week >0) %>%  
+  select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
+S2 <- Data1 %>% # Season 2: 14 to 26 weeks in an year
+  filter(year > 2000 & year < 2018, week <= 13 +13 & week >0+13) %>%
+  select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
+S3 <- Data1 %>% # Season 3: 27 to 38 weeks in an year
+  filter(year > 2000 & year < 2018, week <= 13 +13 + 13 & week >0+13 +13) %>% 
+  select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
+
+S4 <- Data1 %>% # Season 4: 39 to 52 weeks in an year
+  filter(year > 2000 & year < 2018, week <= 13 +13 +13+13 & week >0+13 +13+13) %>%  
+  select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
+```
+******
+
+## Season 1: Influenza cases reported for age group and year for first Season (weeks){.smaller}
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+S1S <- summarise(group_by(S1, year), sum(age_0_4), sum(age_25_64), sum(age_5_24), sum(age_65)) # summing the data for each year in season 1
+
+colnames(S1S)[2:5] <- c('age_0_4','age_25_64', 'age_5_24', 'age_65')
+
+S1SS <- S1S %>%  gather (c(age_0_4, age_5_24, age_25_64, age_65), key = Age, value = cases, na.rm = T)
+
+Season1Plot <- ggplot(S1SS, aes(x = year, y = cases, group = Age, color = Age)) + 
+            geom_point() + geom_line() +
+            labs(x = "Year", y = "Influenxa cases", title = "Total number of influenza cases for season 1 per age group")
+
+Season1Plot
+```
+******
+
+## Season 2: Influenza cases reported for age group and year for second Season (weeks){.smaller}
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+S2S <- summarise(group_by(S2, year), sum(age_0_4), sum(age_25_64), sum(age_5_24), sum(age_65)) # summing the data for each year in season 2
+
+colnames(S2S)[2:5] <- c('age_0_4','age_25_64', 'age_5_24', 'age_65')
+
+S2SS <- S2S %>%  gather (c(age_0_4, age_5_24, age_25_64, age_65), key = Age, value = cases, na.rm = T)
+
+Season2Plot <- ggplot(S2SS, aes(x = year, y = cases, group = Age, color = Age)) + 
+            geom_point() + geom_line() +
+            labs(x = "Year", y = "Influenxa cases", title = "Total number of influenza cases for season 2 per age group")
+
+Season2Plot
+```
+******
+
+## Season 3: Influenza cases reported for age group and year for third Season (weeks){.smaller}
+
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+S3S <- summarise(group_by(S3, year), sum(age_0_4), sum(age_25_64), sum(age_5_24), sum(age_65)) # summing the data for each year in season 1
+
+colnames(S3S)[2:5] <- c('age_0_4','age_25_64', 'age_5_24', 'age_65')
+
+S3SS <- S3S %>%  gather (c(age_0_4, age_5_24, age_25_64, age_65), key = Age, value = cases, na.rm = T)
+
+Season3Plot <- ggplot(S3SS, aes(x = year, y = cases, group = Age, color = Age)) + 
+            geom_point() + geom_line() +
+            labs(x = "Year", y = "Influenxa cases", title = "Total number of influenza cases for season 3 per age group")
+
+Season3Plot
+```
+******
+
+## Season 4: Influenza cases reported for age group and year for fourth Season (weeks){.smaller}
+
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+S4S <- summarise(group_by(S4, year), sum(age_0_4), sum(age_25_64), sum(age_5_24), sum(age_65)) # summing the data for each year in season 1
+
+colnames(S4S)[2:5] <- c('age_0_4','age_25_64', 'age_5_24', 'age_65')
+
+S4SS <- S4S %>%  gather (c(age_0_4, age_5_24, age_25_64, age_65), key = Age, value = cases, na.rm = T)
+
+Season4Plot <- ggplot(S4SS, aes(x = year, y = cases, group = Age, color = Age)) + 
+            geom_point() + geom_line() +
+            labs(x = "Year", y = "Influenxa cases", title = "Total number of influenza cases for season 4 per age group")
+
+Season4Plot
+
+```
+******
+
+## All season plots in a grid: run multiplot function before this!
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+# multiplot(S1SSPlot, S2SSPlot, S3SSPlot, S4SSPlot, cols = 2) # Extracted from this: # # #http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+```
+******
+
+## Illness reported for national per year{.smaller}
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+timeseries <- Data1 %>% select(year, week, ilitotal) %>% filter(year >2000)
+timesum <- summarise(group_by(Data1, year), sum(ilitotal))
+
+colnames(timesum)[2] <- 'ilitotal'
+
+a <- ggplot(timesum, aes(year, ilitotal)) + geom_point() + geom_line() +
+        labs(x = "Year", y = "Total number of influnza cases reported", title = "Total influnza cases reported per year")
+a
+```
+******
+
+## Illness cases reported for season per year{.smaller}
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+b <- ggplot(timeseries, aes(week, ilitotal))+ 
+      geom_point(aes(color = year)) + 
+      labs(x = "Weeks", y = "Total number people ill with influenza", title = "Total number of cases reported per week for 2001 - 2018")
+
+b
+```
+******
+
+##  Illness reports per age groups and as a function of year{.smaller}
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+AgeandWeekData <- Data1 %>% filter (year >2000) %>%  select(year, week, age_0_4, age_5_24, age_25_64,age_65)
+
+A <- AgeandWeekData %>%  gather (c(age_0_4,age_5_24,age_25_64,age_65), key = Age, value = cases, na.rm = T) # even this doesn't work
+
+A2 <- summarise(group_by(A, Age, year), sum(cases))
+
+colnames(A2)[3] <- 'cases'
+
+A3 <- ggplot(A2, aes(x = year, y = cases, group = Age, color = Age)) + 
+      geom_point() + geom_line() + 
+      labs(x = "Year", y = "Cases", title = "Total number of influenza cases per Age group and as a function of Year")
+A3
+
+```
+******
+
+## Age group illness reports data as a function of Weeks{.smaller}
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+Weekdata <- summarise(group_by(AgeandWeekData, week), sum(age_0_4), sum(age_5_24), sum(age_65))
+
+colnames(Weekdata)[2:4] <- c('age_0_4', 'age_5_24', 'age_65')
+
+W1 <- Weekdata %>% gather(c(age_0_4,age_5_24, age_65), key = Age, value = cases, na.rm = T)
+
+W2 <- ggplot(W1, aes(x = week, y = cases, grou = Age, color = Age)) + 
+      geom_point() + geom_line() +
+      labs(x = "Weeks", y = "influenza Cases", title = "Total Number of Influenza cases per age group for each week")
+W2
+
+```
+******
+
+## Multiple plots of illness reports of age for year and weeks{.smaller}
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+# multiplot(A3,W2)
+
+```
+******
+
+## Comparision of Mortality rates due to illness (influence, Pneumonia) and total illness cases reported{.smaller}
+
+******
+```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
+
+Mortalitydata <- pi_mortality()
+
+MD <- arrange(Mortalitydata, year(Mortalitydata$wk_start))
+
+attach(MD)
+
+D2 <- subset(Data1, year > 2008) # subsetting the Data1 to make equivalent and corresponding columns for same weeks in mortality data.
+D3 <- D2[40:(nrow(D2)-2),] # Mortality data has not yet updated so, to make the equvalancy between the two data files, the last 2 weeks data is removed.
+
+MDD3 <- cbind(year(wk_start), year(wk_end), year_wk_num, number_influenza, number_pneumonia, D3$ilitotal) # combined datafile;
+
+colnames(MDD3) <- c("year", "wk_end","week" , "Influenza", "Pneumonia", "totalillness")
+
+MDD3 <- as.tibble(MDD3)
+
+SumMDD3 <- summarise(group_by(MDD3, year), sum(Influenza), sum(Pneumonia), sum(totalillness))
+
+colnames(SumMDD3) <- c("year", "Influenza", "Pneumonia", "totalillness")
+
+z <- SumMDD3 %>%  gather (c(Influenza, Pneumonia, totalillness), key = Illness, value = cases, na.rm = T)
+
+Mortality_Overall_cases_plot <- ggplot(z, aes(x = year, y = cases, group = Illness, color = Illness)) + geom_point() + geom_line() + 
+                                labs(x = "Year", y = "Cases", title = "Total Cases reported and Mortality deadths")
+
+Mortality_Overall_cases_plot
+```
