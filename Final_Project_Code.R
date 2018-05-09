@@ -8,17 +8,17 @@ library(tidyverse)
 Data1 <- ilinet() # extracting the influenza data from CDC website
 
 S1 <- Data1 %>%  # filtering the main data file based on weeks.
-  filter(year > 2000 & year < 2018, week <= 13 & week >0) %>%  
+  filter(year > 2000, week <= 13 & week >0) %>%  
   select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
 S2 <- Data1 %>%
-  filter(year > 2000 & year < 2018, week <= 13 +13 & week >0+13) %>%
+  filter(year > 2000, week <= 13 +13 & week >0+13) %>%
   select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
 S3 <- Data1 %>% 
-  filter(year > 2000 & year < 2018, week <= 13 +13 + 13 & week >0+13 +13) %>% 
+  filter(year > 2000, week <= 13 +13 + 13 & week >0+13 +13) %>% 
   select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
 
 S4 <- Data1 %>%
-  filter(year > 2000 & year < 2018, week <= 13 +13 +13+13 & week >0+13 +13+13) %>%  
+  filter(year > 2000, week <= 13 +13 +13+13 & week >0+13 +13+13) %>%  
   select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
 
 # Season 1: Influenza cases reported for age group and year for first season: weeK:
@@ -30,7 +30,7 @@ S1SS <- S1S %>%  gather (c(age_0_4, age_5_24, age_25_64, age_65), key = Age, val
 
 S1SSPlot <- ggplot(S1SS, aes(x = year, y = cases, group = Age, color = Age)) + 
             geom_point() + geom_line() +
-            labs(x = "Year", y = "Influenxa cases", title = "Total number of influenza cases for season 1 per age group")
+            labs(x = "Year", y = "Influenza cases", title = "Total number of influenza cases for season 1 per age group")
 
 S1SSPlot
 
