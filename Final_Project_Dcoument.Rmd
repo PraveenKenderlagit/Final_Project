@@ -40,17 +40,17 @@ Data1 <- ilinet() # extracting the influenza data from CDC website
 ******
 ```{r, message = FALSE, warning = FALSE, results = 'hide', include=TRUE}
 S1 <- Data1 %>% # Season 1: 1 to 13 weeks in an year
-  filter(year > 2000 & year < 2018, week <= 13 & week >0) %>%  
+  filter(year > 2000, week <= 13 & week >0) %>%  
   select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
 S2 <- Data1 %>% # Season 2: 14 to 26 weeks in an year
-  filter(year > 2000 & year < 2018, week <= 13 +13 & week >0+13) %>%
+  filter(year > 2000, week <= 13 +13 & week >0+13) %>%
   select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
 S3 <- Data1 %>% # Season 3: 27 to 38 weeks in an year
-  filter(year > 2000 & year < 2018, week <= 13 +13 + 13 & week >0+13 +13) %>% 
+  filter(year > 2000, week <= 13 +13 + 13 & week >0+13 +13) %>% 
   select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
 
 S4 <- Data1 %>% # Season 4: 39 to 52 weeks in an year
-  filter(year > 2000 & year < 2018, week <= 13 +13 +13+13 & week >0+13 +13+13) %>%  
+  filter(year > 2000, week <= 13 +13 +13+13 & week >0+13 +13+13) %>%  
   select(region, year, week, age_0_4,age_5_24, age_25_64,age_65)
 ```
 ******
